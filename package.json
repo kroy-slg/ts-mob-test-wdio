@@ -2,13 +2,9 @@
   "name": "wdio-mob-test",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "wdio": "wdio run ./wdio.conf.ts"
-  },
-  "keywords": [],
   "author": "k.roy",
   "license": "ISC",
+  "keywords": [],
   "description": "",
   "devDependencies": {
     "@wdio/appium-service": "^9.14.0",
@@ -22,5 +18,9 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "wdio-wait-for": "^3.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "wdio": "wdio run ./wdio.conf.ts"
   }
 }
