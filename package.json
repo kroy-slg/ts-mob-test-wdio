@@ -21,6 +21,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "wdio": "wdio run ./wdio.conf.ts"
+    "wdio": "wdio run ./wdio.conf.ts",
+    "android": "wdio run config/wdio.android.conf.ts"
   }
 }

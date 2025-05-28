@@ -18,7 +18,7 @@ export let config: WebdriverIO.Config = {
     // of the configuration file being run.
     //
     specs: [
-        // ToDo: define location for spec files here
+        '../src/tests/android/**/*.feature'
     ],
     // Patterns to exclude.
     exclude: [
@@ -38,16 +38,12 @@ export let config: WebdriverIO.Config = {
     // https://saucelabs.com/platform/platform-configurator
     //
     capabilities: [{
-        // capabilities for local Appium web tests on an Android Emulator
         platformName: 'Android',
-        browserName: 'Chrome',
         'appium:deviceName': 'Pixel 6',
         'appium:platformVersion': '14.0',
         'appium:udid': '24151FDF60093T',
-        // 'appium:appPackage': '',
-        // 'appium:appActivity': '',
         'appium:appWaitActivity': 'com.wdiodemoapp.MainActivity',
-        'appium:app': join(process.cwd(), '/apps/android.native.app.apk'),
+        'appium:app': join(process.cwd(), 'src/resources/apps/android.native.app.apk'),
         'appium:automationName': 'UiAutomator2',
         'appium:noReset': false,
         'appium:newCommandTimeout': 120,
@@ -108,7 +104,7 @@ export let config: WebdriverIO.Config = {
     //
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
-    framework: 'mocha',
+    framework: 'cucumber',
     
     //
     // The number of times to retry the entire specfile when it fails as a whole
@@ -124,6 +120,12 @@ export let config: WebdriverIO.Config = {
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
     reporters: ['spec'],
+    cucumberOpts: {
+        require: ['./src/tests/android/step_definitions/**/*.ts'],
+        timeout: 50000,
+        tagExpression: '',
+        ignoreUndefinedDefinitions: false
+    },
 
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
