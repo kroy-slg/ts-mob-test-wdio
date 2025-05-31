@@ -1,5 +1,5 @@
 import {join} from 'path';
-// import config from '../wdio.conf'
+
 export let config: WebdriverIO.Config = {
     //
     // ====================
@@ -7,8 +7,7 @@ export let config: WebdriverIO.Config = {
     // ====================
     // WebdriverIO supports running e2e tests as well as unit and component tests.
     runner: 'local',
-    tsConfigPath: './tsconfig.json',
-    
+
     port: 4723,
     //
     // ==================
