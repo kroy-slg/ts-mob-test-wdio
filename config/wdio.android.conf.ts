@@ -1,4 +1,27 @@
 import {join} from 'path';
+import * as fs from "node:fs";
+
+const { removeSync } = require('fs-extra');
+const multipleCucumberHtmlReporter = require('multiple-cucumber-html-reporter');
+
+let executionTime = new Map();
+
+async function formatReport() {
+    let logFiles= fs.readdirSync('./reports/json/tmp')
+    for (let file of logFiles) {
+        let cucumberLogs = fs.readFileSync('./reports/json/tmp/'+file);
+        let array = JSON.parse(cucumberLogs.toString())
+        await array.forEach(obj=> {
+            obj.elements = obj.elements.filter((item, index, self) => {
+                let elementIndex= self.filter((t) => (t.id === item.id)).at(-1).steps.some(s => s.result.status === "failed")?
+                    self.findIndex((t) => t.id === item.id) :self.findLastIndex((t) => t.id === item.id);
+                let duplicate = (self.filter((t) => t.id === item.id).length >1) && (elementIndex != index);
+                let failed = item.steps.some(s => s.result.status === "failed");
+                return !(duplicate && failed);
+            });})
+        fs.writeFileSync('./reports/json/tmp/'+file,  JSON.stringify(await array));
+    }
+}
 
 export let config: WebdriverIO.Config = {
     //
@@ -118,20 +141,55 @@ export let config: WebdriverIO.Config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec'],
+    reporters: [
+        'spec',
+        'dot',
+        ['cucumberjs-json', {
+            jsonFolder: './reports/json/tmp/',
+            language: 'en',
+        }],
+        ['junit', {
+            outputDir: './reports/',
+            outputFileFormat:  function (options) {
+                return `results-${options.cid}.xml`
+            }
+        }]
+    ],
+
     cucumberOpts: {
         require: ['./src/tests/android/step_definitions/**/*.ts'],
         timeout: 50000,
         tagExpression: '',
-        ignoreUndefinedDefinitions: false
+        ignoreUndefinedDefinitions: false,
     },
 
-    // Options to be passed to Mocha.
-    // See the full list at http://mochajs.org/
-    mochaOpts: {
-        ui: 'bdd',
-        timeout: 60000
+    onPrepare: function () {
+        removeSync('./reports/json/tmp/');
     },
+
+    onComplete: async function () {
+        executionTime.set("startTime", new Date().toLocaleString());
+        executionTime.set("endTime", new Date().toLocaleString());
+        await formatReport();
+        await multipleCucumberHtmlReporter.generate({
+            openReportInBrowser: false,
+            reportName: 'Automation Test Report',
+            displayDuration: true,
+            displayReportTime:true,
+            saveCollectedJSON: false,
+            jsonDir: './reports/json/',
+            reportPath: './reports/html',
+            customMetadata: true,
+            customData: {
+                title: "Run info",
+                data: [
+                    { label: "Execution Start Time", value: executionTime.get("startTime") },
+                    { label: "Execution End Time", value: executionTime.get("endTime") }
+                ],
+            },
+        });
+    }
+
 }
 
 exports.config = config;
