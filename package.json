@@ -1,5 +1,5 @@
 {
-  "name": "wdio-mob-test",
+  "name": "ts-mob-test-wdio",
   "version": "1.0.0",
   "main": "index.js",
   "author": "k.roy",
