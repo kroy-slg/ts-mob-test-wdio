@@ -1,4 +1,4 @@
-import basePage from "./basePage";
+import basePage from "../../basePage";
 
 let homeNavbarOptionSelector = '//*[(@text="Home")]/preceding-sibling::*[(@class="android.widget.TextView")]';
 let webviewNavbarOptionSelector = '//*[(@text="Webview")]/preceding-sibling::*[(@class="android.widget.TextView")]';
