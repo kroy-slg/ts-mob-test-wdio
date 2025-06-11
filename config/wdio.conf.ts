@@ -1,4 +1,4 @@
-export const config: WebdriverIO.Config = {
+export const config = {
     //
     // ====================
     // Runner Configuration
@@ -116,7 +116,14 @@ export const config: WebdriverIO.Config = {
     //
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
-    framework: 'mocha',
+    framework: 'cucumber',
+
+    cucumberOpts: {
+        require: ['./src/tests/android/step_definitions/**/*.ts'],
+        timeout: 50000,
+        tagExpression: '',
+        ignoreUndefinedDefinitions: false,
+    },
     
     //
     // The number of times to retry the entire specfile when it fails as a whole
