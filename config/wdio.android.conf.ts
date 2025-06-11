@@ -142,18 +142,25 @@ export let config: WebdriverIO.Config = {
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
     reporters: [
-        'spec',
         'dot',
+        ['spec', {
+            symbols: {
+                passed: '✓',
+                failed: '✖',
+                skipped: '-'
+            },
+            showPreface: false,
+        }],
         ['cucumberjs-json', {
-            jsonFolder: './reports/json/tmp/',
-            language: 'en',
+                jsonFolder: './reports/json/tmp/',
+                language: 'en',
         }],
         ['junit', {
-            outputDir: './reports/',
-            outputFileFormat:  function (options) {
-                return `results-${options.cid}.xml`
-            }
-        }]
+        outputDir: './reports/',
+            utputFileFormat:  function (options) {
+            return `results-${options.cid}.xml`
+        },
+        }],
     ],
 
     cucumberOpts: {
